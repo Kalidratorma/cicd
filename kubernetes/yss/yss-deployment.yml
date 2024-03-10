@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: yss
+  name: yss
+  namespace: default
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: yss
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: yss
+    spec:
+      volumes:
+        - name: contentfiles
+          persistentVolumeClaim:
+            claimName: yss-pv-claim
+      containers:
+      - volumeMounts:
+          - mountPath: "/app/storage"
+            name: contentfiles
+        env:
+        - name: POSTGRES_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_HOST
+              name: postgres-config
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_YSS_DB
+              name: postgres-config
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: db-credentials
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: db-credentials
+        - name: JWT_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              key: key
+              name: jwt-secret
+        image: kalidratorma/yss:$VERSION
+        imagePullPolicy: Always
+        name: cms-core
+        ports:
+        - containerPort: 8000
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            port: 8000
+            path: /api/actuator/health/readiness
+          initialDelaySeconds: 50
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            port: 8000
+            path: /api/actuator/health/liveness
+          initialDelaySeconds: 50
+          periodSeconds: 10
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always

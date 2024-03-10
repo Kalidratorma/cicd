@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ivehelp-mail
+  name: ivehelp-mail
+  namespace: default
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: ivehelp-mail
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: ivehelp-mail
+    spec:
+      volumes:
+        - name: data-vol
+          persistentVolumeClaim:
+            claimName: ivehelp-mail-data-pv-claim
+        - name: state-vol
+          persistentVolumeClaim:
+            claimName: ivehelp-mail-state-pv-claim
+        - name: log-vol
+          persistentVolumeClaim:
+            claimName: ivehelp-mail-log-pv-claim
+        - name: config-vol
+          persistentVolumeClaim:
+            claimName: ivehelp-mail-config-pv-claim
+      containers:
+      - volumeMounts:
+          - mountPath: "/var/mail/"
+            name: data-vol
+          - mountPath: "/var/mail-state/"
+            name: state-vol
+          - mountPath: "/var/log/mail/"
+            name: log-vol
+          - mountPath: "/tmp/docker-mailserver/"
+            name: config-vol
+        env:
+        - name: ENABLE_RSPAMD
+          value: "1"
+        - name: ENABLE_CLAMAV
+          value: "1"
+        - name: ENABLE_FAIL2BAN
+          value: "1"
+        - name: OVERRIDE_HOSTNAME
+          value: "mail.ivehelp.com"
+        image: ghcr.io/docker-mailserver/docker-mailserver:latest
+        imagePullPolicy: Always
+        name: ivehelp-mail
+        ports:
+        - containerPort: 25
+          protocol: TCP
+        - containerPort: 465
+          protocol: TCP
+        - containerPort: 587
+          protocol: TCP
+        - containerPort: 993
+          protocol: TCP
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always

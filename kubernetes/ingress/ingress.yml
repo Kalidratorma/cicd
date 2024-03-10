@@ -1,0 +1,56 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    acme.cert-manager.io/http01-edit-in-place: "true"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  name: demo-localhost
+  namespace: default
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: kalidratorma.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: yss-frontend
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+      - backend:
+          service:
+            name: yss
+            port:
+              number: 80
+        path: /api
+        pathType: Prefix
+  - host: skvazy.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: cms-frontend
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+      - backend:
+          service:
+            name: cms-core
+            port:
+              number: 80
+        path: /api
+        pathType: Prefix
+  tls:
+  - hosts:
+    - skvazy.com
+    secretName: skvazy-cert-prod
+  - hosts:
+    - kalidratorma.com
+    secretName: kalidratorma-cert-prod
+status:
+  loadBalancer:
+    ingress:
+    - ip: 192.168.0.200

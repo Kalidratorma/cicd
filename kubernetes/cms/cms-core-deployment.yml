@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: cms-core
+  name: cms-core
+  namespace: default
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: cms-core
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: cms-core
+    spec:
+      volumes:
+        - name: contentfiles
+          persistentVolumeClaim:
+            claimName: cms-core-pv-claim
+      containers:
+      - volumeMounts:
+          - mountPath: "/app/storage"
+            name: contentfiles
+        env:
+        - name: POSTGRES_HOST
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_HOST
+              name: postgres-config
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              key: POSTGRES_CMS_DB
+              name: postgres-config
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              key: username
+              name: db-credentials
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              key: password
+              name: db-credentials
+        - name: JWT_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              key: key
+              name: jwt-secret
+        image: kalidratorma/cms-core:$VERSION
+        imagePullPolicy: Always
+        name: cms-core
+        ports:
+        - containerPort: 8000
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            port: 8000
+            path: /api/actuator/health/readiness
+          initialDelaySeconds: 120
+          periodSeconds: 20
+        livenessProbe:
+          httpGet:
+            port: 8000
+            path: /api/actuator/health/liveness
+          initialDelaySeconds: 120
+          periodSeconds: 20
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always

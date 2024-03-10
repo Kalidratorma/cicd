@@ -1,0 +1,119 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: ivehelp-mail-data-pv
+  labels:
+    app: ivehelp-mail
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /var/lib/data/ivehelp-mail/data
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ivehelp-mail-data-pv-claim
+  labels:
+    app: ivehelp-mail
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Gi
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: ivehelp-mail-state-pv
+  labels:
+    app: ivehelp-mail
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /var/lib/data/ivehelp-mail/state
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ivehelp-mail-state-pv-claim
+  labels:
+    app: ivehelp-mail
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: ivehelp-mail-log-pv
+  labels:
+    app: ivehelp-mail
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /var/lib/data/ivehelp-mail/log
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ivehelp-mail-log-pv-claim
+  labels:
+    app: ivehelp-mail
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 1Gi
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: ivehelp-mail-config-pv
+  labels:
+    app: ivehelp-mail
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 10Mi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /var/lib/data/ivehelp-mail/config
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ivehelp-mail-config-pv-claim
+  labels:
+    app: ivehelp-mail
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 10Mi

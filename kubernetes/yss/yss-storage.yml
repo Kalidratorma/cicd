@@ -1,0 +1,29 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: yss-pv-volume
+  labels:
+    app: yss
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /var/lib/data/yss-content-files
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: yss-pv-claim
+  labels:
+    app: yss
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi

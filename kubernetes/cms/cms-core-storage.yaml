@@ -1,0 +1,29 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: cms-core-pv-volume
+  labels:
+    app: cms-core
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /var/lib/data/cms-content-files
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: cms-core-pv-claim
+  labels:
+    app: cms-core
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi
