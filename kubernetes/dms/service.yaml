@@ -1,0 +1,87 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    meta.helm.sh/release-name: docker-mailserver
+    meta.helm.sh/release-namespace: mail
+    prometheus.io/path: /metrics
+    prometheus.io/port: "9102"
+    prometheus.io/probe: "false"
+    prometheus.io/scrape: "true"
+    purelb.io/allocated-by: PureLB
+    purelb.io/allocated-from: default
+    purelb.io/announcing-IPv4: kubenode1,enX1
+  labels:
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: docker-mailserver
+    chart: docker-mailserver-3.0.10
+    heritage: Helm
+    release: docker-mailserver
+  name: docker-mailserver
+  namespace: mail
+spec:
+  allocateLoadBalancerNodePorts: true
+  clusterIP: 10.102.22.235
+  clusterIPs:
+  - 10.102.22.235
+  externalTrafficPolicy: Cluster
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: smtp
+    nodePort: 31410
+    port: 25
+    protocol: TCP
+    targetPort: smtp
+  - name: submissions
+    nodePort: 32587
+    port: 465
+    protocol: TCP
+    targetPort: submissions
+  - name: submission
+    nodePort: 32581
+    port: 587
+    protocol: TCP
+    targetPort: submission
+  - name: subs-proxy
+    nodePort: 31404
+    port: 10465
+    protocol: TCP
+    targetPort: subs-proxy
+  - name: sub-proxy
+    nodePort: 31862
+    port: 10587
+    protocol: TCP
+    targetPort: sub-proxy
+  - name: imap
+    nodePort: 32162
+    port: 143
+    protocol: TCP
+    targetPort: imap
+  - name: imaps
+    nodePort: 30867
+    port: 993
+    protocol: TCP
+    targetPort: imaps
+  - name: imap-proxy
+    nodePort: 31555
+    port: 10143
+    protocol: TCP
+    targetPort: imap-proxy
+  - name: imaps-proxy
+    nodePort: 32397
+    port: 10993
+    protocol: TCP
+    targetPort: imaps-proxy
+  - name: rspamd
+    nodePort: 31022
+    port: 11334
+    protocol: TCP
+    targetPort: rspamd
+  selector:
+    app.kubernetes.io/name: docker-mailserver
+    release: docker-mailserver
+  sessionAffinity: None
+  type: LoadBalancer
