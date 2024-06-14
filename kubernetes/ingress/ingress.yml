@@ -50,7 +50,3 @@ spec:
   - hosts:
     - kalidratorma.com
     secretName: kalidratorma-cert-prod
-status:
-  loadBalancer:
-    ingress:
-    - ip: 192.168.0.200
