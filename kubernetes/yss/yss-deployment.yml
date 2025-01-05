@@ -7,7 +7,7 @@ metadata:
   namespace: default
 spec:
   replicas: 1
-  revisionHistoryLimit: 3
+  revisionHistoryLimit: 1
   selector:
     matchLabels:
       app: yss
@@ -65,13 +65,13 @@ spec:
           httpGet:
             port: 8000
             path: /api/actuator/health/readiness
-          initialDelaySeconds: 50
-          periodSeconds: 10
+          initialDelaySeconds: 180
+          periodSeconds: 30
         livenessProbe:
           httpGet:
             port: 8000
             path: /api/actuator/health/liveness
-          initialDelaySeconds: 50
-          periodSeconds: 10
+          initialDelaySeconds: 180
+          periodSeconds: 30
       dnsPolicy: ClusterFirst
       restartPolicy: Always

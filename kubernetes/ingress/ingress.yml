@@ -43,6 +43,16 @@ spec:
               number: 80
         path: /api
         pathType: Prefix
+  - host: mail.ivehelp.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: docker-mailserver
+            port:
+              number: 465
+        path: /
+        pathType: Prefix
   tls:
   - hosts:
     - skvazy.com
@@ -50,3 +60,6 @@ spec:
   - hosts:
     - kalidratorma.com
     secretName: kalidratorma-cert-prod
+  - hosts:
+    - mail.ivehelp.com
+    secretName: ivehelp-mail-cert-prod

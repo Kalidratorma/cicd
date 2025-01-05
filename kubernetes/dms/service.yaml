@@ -35,11 +35,6 @@ spec:
     port: 25
     protocol: TCP
     targetPort: smtp
-  - name: submissions
-    nodePort: 32587
-    port: 465
-    protocol: TCP
-    targetPort: submissions
   - name: submission
     nodePort: 32581
     port: 587
