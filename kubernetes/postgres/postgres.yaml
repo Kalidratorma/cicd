@@ -6,6 +6,7 @@ data:
   POSTGRES_DB: postgresdb
   POSTGRES_CMS_DB: cms
   POSTGRES_YSS_DB: yss
+  POSTGRES_NODIKI_DB: nodiki
   POSTGRES_HOST: [host]
   POSTGRES_USER: postgres
   POSTGRES_PASSWORD: [change_me]
